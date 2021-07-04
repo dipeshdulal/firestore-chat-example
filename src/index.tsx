@@ -1,13 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { firebaseConfig } from './config';
 import "./index.css";
 import reportWebVitals from './reportWebVitals';
-import firebase from "firebase";
 import { QueryClient, QueryClientProvider } from 'react-query';
-
-firebase.initializeApp(firebaseConfig);
+import "./firebase";
 
 const queryClient = new QueryClient();
 
