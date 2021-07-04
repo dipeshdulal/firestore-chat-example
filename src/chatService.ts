@@ -75,4 +75,5 @@ export const chatService = {
     sendMessage,
     getMessages,
     attachMessageListener,
+    PER_PAGE,
 }

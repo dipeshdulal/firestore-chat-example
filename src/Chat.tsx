@@ -63,7 +63,7 @@ export const Chat: React.FC<ChatProps> = ({
                     data?.pages.flat().map((data) => <Bubble right={chatState.username === data.username} username={data.username} time={dayjs(data.createdAt).format("HH:mm")} message={data.text} key={data.id} />)
                 }
                 {
-                    hasNextPage && (
+                    hasNextPage && (data?.pages.flat().length || 0) > chatService.PER_PAGE && (
                         <div className="flex self-center my-2">
                             <a className="ease transition-all delay-75 bg-gray-600 text-center text-sm text-white rounded-full p-2 px-5 cursor-pointer hover:bg-gray-800" onClick={() => fetchNextPage()}>Earlier messages</a>
                         </div>
