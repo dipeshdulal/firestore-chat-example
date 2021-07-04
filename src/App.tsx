@@ -1,24 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { stringify } from "querystring";
+import { useState } from "react";
+import { Chat } from "./Chat";
+import { InitialScreen } from "./InitialScreen";
+
+type Screens = "chat" | "initial"
+interface ChatState {
+  username: string;
+  room_id: string;
+}
 
 function App() {
+
+  const [chatState, setChatState] = useState<ChatState>();
+  const [screenState, setScreenState] = useState<Screens>("initial")
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="mx-auto h-screen flex flex-col items-center justify-center">
+      {screenState === "chat" && <Chat onBackPress={() => setScreenState("initial")} />}
+      {screenState === "initial" && <InitialScreen onSubmit={(room_id, username) => {
+        setChatState({ room_id, username })
+        setScreenState("chat")
+      }} />}
     </div>
   );
 }
