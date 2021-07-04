@@ -3,10 +3,9 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import "./index.css";
 import reportWebVitals from './reportWebVitals';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClientProvider } from 'react-query';
 import "./firebase";
-
-const queryClient = new QueryClient();
+import { queryClient } from './queryClient';
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import React, { FormEvent } from 'react'
+import React, { FormEvent, useEffect } from 'react'
 import { useState } from 'react'
 import { useInfiniteQuery, useMutation, useQueryClient } from 'react-query';
 import { Bubble } from './Bubble'
@@ -19,7 +19,9 @@ export const Chat: React.FC<ChatProps> = ({
     onBackPress,
     chatState,
 }) => {
-    const queryClient = useQueryClient();
+
+    const roomId = chatState.room_id;
+    const queryKey = ["messages", roomId];
 
     const [message, setMessage] = useState("");
 
@@ -27,24 +29,22 @@ export const Chat: React.FC<ChatProps> = ({
         onMutate: () => {
             setMessage("")
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries(["messages", chatState.room_id])
-        }
     });
 
     const handleSendMessage = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         if (message.trim()) {
             sendMutation.mutate({
-                roomId: chatState.room_id,
+                roomId: roomId,
                 text: message,
                 username: chatState.username,
             })
         }
     }
 
-    const { data } = useInfiniteQuery(["messages", chatState.room_id], chatService.getMessages);
+    const { data } = useInfiniteQuery(queryKey, chatService.getMessages);
+
+    useEffect(() => chatService.attachMessageListener(queryKey), [roomId])
 
     return (
         <>
