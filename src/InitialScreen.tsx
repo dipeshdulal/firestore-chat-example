@@ -16,7 +16,8 @@ export const InitialScreen: React.FC<InitialScreenProps> = ({
         <div className="flex items-center justify-center flex-col px-10 max-w-lg">
             <h1 className="text-lg font-bold font-mono my-5">🔥 firestore chat 💬 </h1>
             <h3 className="py-5">Enter <span className="font-mono bg-gray-200">room_id</span> and <span className="font-mono bg-gray-200">username</span> to join.</h3>
-            <form className="flex flex-row" onSubmit={() => {
+            <form className="flex flex-row" onSubmit={(e) => {
+                e.preventDefault()
                 onSubmit(roomID, username)
             }}>
                 <input required className="flex-1 appearance-none border w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-purple-600 rounded-r-none font-mono" placeholder="room_id" onChange={({ target: { value } }) => setRoomID(value)} />

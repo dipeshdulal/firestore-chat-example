@@ -11,12 +11,12 @@ interface ChatState {
 
 function App() {
 
-  const [chatState, setChatState] = useState<ChatState>();
+  const [chatState, setChatState] = useState<ChatState>({ room_id: "", username: "" });
   const [screenState, setScreenState] = useState<Screens>("initial")
 
   return (
     <div className="mx-auto h-screen flex flex-col items-center justify-center">
-      {screenState === "chat" && <Chat onBackPress={() => setScreenState("initial")} />}
+      {screenState === "chat" && <Chat chatState={chatState} onBackPress={() => setScreenState("initial")} />}
       {screenState === "initial" && <InitialScreen onSubmit={(room_id, username) => {
         setChatState({ room_id, username })
         setScreenState("chat")
