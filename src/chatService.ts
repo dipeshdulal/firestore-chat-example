@@ -38,6 +38,14 @@ const getMessages: QueryFunction<ChatMessage[]> = async (key) => {
     return retMessage;
 }
 
+const hasMessageBefore = async (roomId: string, date?: Date) => {
+    if (!date) {
+        return false;
+    }
+    const data = await db.collection(`Chats/${roomId}/messages`).orderBy("createdAt", "desc").where("createdAt", "<", date).limit(1).get()
+    return !!data.docs.length;
+}
+
 const attachMessageListener = (key: QueryKey): () => void => {
     const roomId = key[1];
     return db.collection(`Chats/${roomId}/messages`).orderBy("createdAt", "desc").where("createdAt", ">", new Date()).onSnapshot((snap) => {
@@ -76,4 +84,5 @@ export const chatService = {
     getMessages,
     attachMessageListener,
     PER_PAGE,
+    hasMessageBefore,
 }
