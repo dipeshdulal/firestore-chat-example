@@ -19,8 +19,8 @@ export const InitialScreen: React.FC<InitialScreenProps> = ({
             <form className="flex flex-row" onSubmit={() => {
                 onSubmit(roomID, username)
             }}>
-                <input required className="flex-1 appearance-none border w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent rounded-r-none font-mono" placeholder="room_id" />
-                <input required className="flex-1 appearance-none border w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent rounded-r-none font-mono" placeholder="username" />
+                <input required className="flex-1 appearance-none border w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-purple-600 rounded-r-none font-mono" placeholder="room_id" onChange={({ target: { value } }) => setRoomID(value)} />
+                <input required className="flex-1 appearance-none border w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent rounded-r-none font-mono" placeholder="username" onChange={({ target: { value } }) => setUsername(value)} />
                 <input type="submit" className={`transition-all delay-300 ease flex-shrink-0 text-white text-base font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200 rounded-l-none bg-purple-600`} value="JOIN" />
             </form>
         </div>
