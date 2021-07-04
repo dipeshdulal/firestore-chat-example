@@ -42,7 +42,13 @@ export const Chat: React.FC<ChatProps> = ({
         }
     }
 
-    const { data } = useInfiniteQuery(queryKey, chatService.getMessages);
+    const { data } = useInfiniteQuery(queryKey, chatService.getMessages, {
+        getNextPageParam: (lp) => {
+            if(lp.length) {
+                return lp?.[lp.length-1].createdAt;
+            }
+        }
+    });
 
     useEffect(() => chatService.attachMessageListener(queryKey), [roomId])
 

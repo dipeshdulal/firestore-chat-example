@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import firebase from "firebase";
 import { InfiniteData, MutationFunction, QueryFunction, QueryKey } from "react-query"
 import { db } from "./firebase"
@@ -25,8 +24,12 @@ const sendMessage: MutationFunction<any, ChatMessage> = async (message) => {
 
 const getMessages: QueryFunction<ChatMessage[]> = async (key) => {
     const roomId = key.queryKey[1];
+    let date = new Date();
+    if (key.pageParam) {
+        date = key.pageParam;
+    }
 
-    const snapshot = await db.collection(`Chats/${roomId}/messages`).orderBy("createdAt", "desc").limit(PER_PAGE).get();
+    const snapshot = await db.collection(`Chats/${roomId}/messages`).orderBy("createdAt", "desc").where("createdAt", "<", date).limit(PER_PAGE).get();
     const retMessage: ChatMessage[] = []
     for (const message of snapshot.docs) {
         const data = message.data() as any;
@@ -37,11 +40,9 @@ const getMessages: QueryFunction<ChatMessage[]> = async (key) => {
 
 const attachMessageListener = (key: QueryKey): () => void => {
     const roomId = key[1];
-    console.log("room-id", roomId)
     return db.collection(`Chats/${roomId}/messages`).orderBy("createdAt", "desc").where("createdAt", ">", new Date()).onSnapshot((snap) => {
         const changes = snap.docChanges()
         for (const change of changes) {
-            console.log(change.type, change.doc.data())
             if (change.type === "added") {
                 const data = change.doc.data();
                 const message = { ...data, createdAt: data.createdAt.toDate() } as ChatMessage;
