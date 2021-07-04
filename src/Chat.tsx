@@ -24,6 +24,7 @@ export const Chat: React.FC<ChatProps> = ({
     const queryKey = ["messages", roomId];
 
     const [message, setMessage] = useState("");
+    const [hasNextPage, setHasNextPage] = useState(false);
 
     const sendMutation = useMutation(chatService.sendMessage, {
         onMutate: () => {
@@ -42,7 +43,7 @@ export const Chat: React.FC<ChatProps> = ({
         }
     }
 
-    const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(queryKey, chatService.getMessages, {
+    const { data, fetchNextPage } = useInfiniteQuery(queryKey, chatService.getMessages, {
         getNextPageParam: (lp) => {
             if (lp.length) {
                 return lp?.[lp.length - 1].createdAt;
@@ -51,6 +52,19 @@ export const Chat: React.FC<ChatProps> = ({
     });
 
     useEffect(() => chatService.attachMessageListener(queryKey), [roomId])
+
+    const flatData = data?.pages.flat() || []
+    const lastDate = flatData?.[flatData.length - 1]?.createdAt;
+
+    useEffect(() => {
+        const getNextPage = async () => {
+            const np = await chatService.hasMessageBefore(roomId, lastDate);
+            setHasNextPage(np);
+        }
+        if (lastDate && roomId) {
+            getNextPage()
+        }
+    }, [lastDate, roomId])
 
     return (
         <>
@@ -63,7 +77,7 @@ export const Chat: React.FC<ChatProps> = ({
                     data?.pages.flat().map((data) => <Bubble right={chatState.username === data.username} username={data.username} time={dayjs(data.createdAt).format("HH:mm")} message={data.text} key={data.id} />)
                 }
                 {
-                    hasNextPage && (data?.pages.flat().length || 0) > chatService.PER_PAGE && (
+                    hasNextPage && (
                         <div className="flex self-center my-2">
                             <a className="ease transition-all delay-75 bg-gray-600 text-center text-sm text-white rounded-full p-2 px-5 cursor-pointer hover:bg-gray-800" onClick={() => fetchNextPage()}>Earlier messages</a>
                         </div>
