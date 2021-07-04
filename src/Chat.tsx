@@ -42,10 +42,10 @@ export const Chat: React.FC<ChatProps> = ({
         }
     }
 
-    const { data } = useInfiniteQuery(queryKey, chatService.getMessages, {
+    const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(queryKey, chatService.getMessages, {
         getNextPageParam: (lp) => {
-            if(lp.length) {
-                return lp?.[lp.length-1].createdAt;
+            if (lp.length) {
+                return lp?.[lp.length - 1].createdAt;
             }
         }
     });
@@ -61,6 +61,13 @@ export const Chat: React.FC<ChatProps> = ({
             <div className="w-screen flex-1 flex flex-col-reverse overflow-auto px-10">
                 {
                     data?.pages.flat().map((data) => <Bubble right={chatState.username === data.username} username={data.username} time={dayjs(data.createdAt).format("HH:mm")} message={data.text} key={data.id} />)
+                }
+                {
+                    hasNextPage && (
+                        <div className="flex self-center my-2">
+                            <a className="ease transition-all delay-75 bg-gray-600 text-center text-sm text-white rounded-full p-2 px-5 cursor-pointer hover:bg-gray-800" onClick={() => fetchNextPage()}>Earlier messages</a>
+                        </div>
+                    )
                 }
             </div>
             <form className="mx-auto w-screen flex p-10" onSubmit={handleSendMessage}>
