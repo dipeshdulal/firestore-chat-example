@@ -11,7 +11,7 @@ export interface ChatMessage {
     id?: string;
 }
 
-const PER_PAGE = 5;
+const PER_PAGE = 20;
 
 const sendMessage: MutationFunction<any, ChatMessage> = async (message) => {
     const docRef = db.collection(`Chats/${message.roomId}/messages`).doc();
